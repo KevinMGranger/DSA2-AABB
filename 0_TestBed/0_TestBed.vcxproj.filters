@@ -30,6 +30,9 @@
     <ClInclude Include="BoundingSphereManagerSingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingBoxClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\BTO.rc">
@@ -53,6 +56,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BoundingSphereManagerSingleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBoxClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
