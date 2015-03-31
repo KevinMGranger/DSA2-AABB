@@ -115,17 +115,12 @@ void BoundingBoxManagerSingleton::AddBoxToRenderList(String a_sInstanceName)
 	}
 }
 
-// Return true if a value is between the other two values, exclusively
-// (C'mon, float equality?)
-static bool isBetween(float value, float min, float max)
-{
-	return (value > min && value < max);
-}
-
 void BoundingBoxManagerSingleton::CalculateCollision(void)
 {
-	/* A collision occurs when 3 orthogonal faces total, across both boxes,
-	 * exist within the dimensionally equivalent bounds of faces of the other box.
+	/* A collision occurs when the lines representing each dimension
+	 * of each box overlap within their respective dimensions.
+     *
+	 * i.e. when the lines representing width overlap, as well as height and depth.
 	 *
 	 * A face's value in its dimension can be found via the min and max vector3s.
 	 *
@@ -141,8 +136,6 @@ void BoundingBoxManagerSingleton::CalculateCollision(void)
 	for(int i = 0; i < m_nBoxen - 1; i++)
 	for(int j = i + 1; j < m_nBoxen; j++)
 	{
-		int numFacesInBound = 0;
-
 		auto a = m_lBox[i];
 		auto b = m_lBox[j];
 
@@ -166,19 +159,9 @@ void BoundingBoxManagerSingleton::CalculateCollision(void)
 		auto &bfront = bmax.z;
 		auto &bback = bmin.z;
 
-		if (isBetween(aright, bleft, bright) || isBetween(bright, aleft, aright) ||
-			isBetween(aleft, bleft, bright) || isBetween(bleft, aleft, aright))
-			numFacesInBound++;
-
-		if (isBetween(atop, bbottom, btop) || isBetween(btop, abottom, atop) ||
-			isBetween(abottom, bbottom, btop) || isBetween(bbottom, abottom, atop))
-			numFacesInBound++;
-
-		if (isBetween(afront, bback, bfront) || isBetween(bfront, aback, afront) ||
-			isBetween(aback, bback, bfront) || isBetween(bback, aback, afront))
-			numFacesInBound++;
-
-		if (numFacesInBound == 3)
+		if (aleft < bright && aright > bleft &&
+			abottom < btop && atop > bbottom &&
+			aback < bfront && afront > bback)
 			m_lColor[i] = m_lColor[j] = MERED;
 	}
 }
