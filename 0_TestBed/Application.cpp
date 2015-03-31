@@ -12,16 +12,16 @@ void ApplicationClass::InitAppVariables()
 	m_pMeshMngr->LoadModel("Minecraft\\MC_Pig.obj", "Pig");
 	m_pMeshMngr->LoadModel("Minecraft\\MC_Zombie.obj", "Zombie");
 	//m_pMeshMngr->m_pModelMngr->LoadModelUnthreaded("Minecraft\\MC_Steve.obj", "A");
-	pBoundingSphere1 = new BoundingSphereClass();
-	pBoundingSphere2 = new BoundingSphereClass();
+	pBoundingBox1 = new BoundingBoxClass();
+	pBoundingBox2 = new BoundingBoxClass();
 
-	m_pBSMngr = BoundingSphereManagerSingleton::GetInstance();
+	m_pBSMngr = BoundingBoxManagerSingleton::GetInstance();
 
 	m_m4Creeper = glm::translate(vector3(3.0f,0.0f,0.0f));
 
 	m_pCamera->SetPosition(vector3(fSteve,1.0f,11.0f));
 }
-void ApplicationClass::GenerateBoundingSphere(matrix4 a_mModelToWorld, String a_sInstanceName)
+void ApplicationClass::GenerateBoundingBox(matrix4 a_mModelToWorld, String a_sInstanceName)
 {
 	if(m_pMeshMngr->IsInstanceCreated(a_sInstanceName))
 	{
@@ -92,33 +92,33 @@ void ApplicationClass::Update (void)
 	m_pMeshMngr->SetModelMatrix(m4Cow, "Cow");
 
 #pragma region Method
-	//GenerateBoundingSphere(mA,"A");
+	//GenerateBoundingBox(mA,"A");
 #pragma endregion
 
-#pragma region Bounding Sphere Class
-	//pBoundingSphere1->GenerateBoundingSphere("Steve");
-	//pBoundingSphere2->GenerateBoundingSphere("Creeper");
+#pragma region Bounding Box Class
+	//pBoundingBox1->GenerateBoundingBox("Steve");
+	//pBoundingBox2->GenerateBoundingBox("Creeper");
 	
-	//pBoundingSphere1->AddSphereToRenderList(m4Steve, MEYELLOW, true);
-	//pBoundingSphere2->AddSphereToRenderList(m_m4Creeper, MEYELLOW, true);
+	//pBoundingBox1->AddBoxToRenderList(m4Steve, MEYELLOW, true);
+	//pBoundingBox2->AddBoxToRenderList(m_m4Creeper, MEYELLOW, true);
 #pragma endregion
 
-#pragma region Bounding Sphere Manager
-	m_pBSMngr->GenerateBoundingSphere("Steve");
-	m_pBSMngr->GenerateBoundingSphere("Creeper");
-	m_pBSMngr->GenerateBoundingSphere("Cow");
-	m_pBSMngr->GenerateBoundingSphere("Zombie");
-	m_pBSMngr->GenerateBoundingSphere("Pig");
+#pragma region Bounding Box Manager
+	m_pBSMngr->GenerateBoundingBox("Steve");
+	m_pBSMngr->GenerateBoundingBox("Creeper");
+	m_pBSMngr->GenerateBoundingBox("Cow");
+	m_pBSMngr->GenerateBoundingBox("Zombie");
+	m_pBSMngr->GenerateBoundingBox("Pig");
 
-	m_pBSMngr->SetBoundingSphereSpace(m4Steve, "Steve");
-	m_pBSMngr->SetBoundingSphereSpace(m_m4Creeper, "Creeper");
-	m_pBSMngr->SetBoundingSphereSpace(m4Cow, "Cow");
-	m_pBSMngr->SetBoundingSphereSpace(m4Pig, "Pig");
-	m_pBSMngr->SetBoundingSphereSpace(m4Zombie, "Zombie");
+	m_pBSMngr->SetBoundingBoxSpace(m4Steve, "Steve");
+	m_pBSMngr->SetBoundingBoxSpace(m_m4Creeper, "Creeper");
+	m_pBSMngr->SetBoundingBoxSpace(m4Cow, "Cow");
+	m_pBSMngr->SetBoundingBoxSpace(m4Pig, "Pig");
+	m_pBSMngr->SetBoundingBoxSpace(m4Zombie, "Zombie");
 
 	m_pBSMngr->CalculateCollision();
 
-	m_pBSMngr->AddSphereToRenderList("ALL");
+	m_pBSMngr->AddBoxToRenderList("ALL");
 #pragma endregion
 
 	m_pMeshMngr->AddInstanceToRenderList();

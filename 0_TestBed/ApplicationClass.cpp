@@ -64,8 +64,8 @@ void ApplicationClass::ReleaseInstance(void)
 void ApplicationClass::Release()
 {
 	// Delete the used variables
-	SafeDelete(pBoundingSphere1);
-	SafeDelete(pBoundingSphere2);
+	SafeDelete(pBoundingBox1);
+	SafeDelete(pBoundingBox2);
 
 	SafeDelete(m_pGrid);
 	SafeDelete(m_pWindow);
@@ -343,7 +343,7 @@ void ApplicationClass::InitAppSystem(void)
 	m_bForceNewConfig = false;
 	m_pSystem->WindowWidth = 1280;
 	m_pSystem->WindowHeight = 720;
-	m_pSystem->WindowName = "Bounding Spheres";
+	m_pSystem->WindowName = "Bounding Boxs";
 	m_pSystem->m_RenderingContext = OPENGL3X;
 	m_pSystem->WindowFullscreen = false;
 	m_pSystem->WindowBorderless = true;

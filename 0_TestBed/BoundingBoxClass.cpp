@@ -1,6 +1,6 @@
 
 #include "BoundingBoxClass.h"
-//  BoundingSphereClass
+//  BoundingBoxClass
 void BoundingBoxClass::Init(void)
 {
 	m_bInitialized = false;
@@ -46,7 +46,7 @@ float BoundingBoxClass::GetRadius(void){ return m_fRadius; }
 vector3 BoundingBoxClass::GetCentroid(void){ return m_v3Centroid; }
 String BoundingBoxClass::GetName(void){return m_sName;}
 //Methods
-void BoundingBoxClass::GenerateBoundingSphere(String a_sInstanceName)
+void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 {
 	//If this has already been initialized there is nothing to do here
 	if(m_bInitialized)
@@ -92,7 +92,7 @@ void BoundingBoxClass::GenerateBoundingSphere(String a_sInstanceName)
 		m_bInitialized = true;
 	}
 }
-void BoundingBoxClass::AddSphereToRenderList(matrix4 a_mModelToWorld, vector3 a_vColor, bool a_bRenderCentroid)
+void BoundingBoxClass::AddBoxToRenderList(matrix4 a_mModelToWorld, vector3 a_vColor, bool a_bRenderCentroid)
 {
 	if(!m_bInitialized)
 		return;

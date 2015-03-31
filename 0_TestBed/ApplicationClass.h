@@ -7,8 +7,8 @@ Date: 2014/10
 #pragma warning(disable:4251)
 
 #include "ME\MyEngine.h"
-#include "BoundingSphereClass.h"
-#include "BoundingSphereManagerSingleton.h"
+#include "BoundingBoxClass.h"
+#include "BoundingBoxManagerSingleton.h"
 #include <SFML\Graphics.hpp>
 #include <chrono>
 
@@ -20,10 +20,10 @@ class ApplicationClass
 	bool m_bArcBall;// Arcball flag
 	bool m_bForceNewConfig;// Using the new configuration for the project
 
-	BoundingSphereManagerSingleton* m_pBSMngr;//Manager of the Bounding Spheres
+	BoundingBoxManagerSingleton* m_pBSMngr;//Manager of the Bounding Boxs
 
-	BoundingSphereClass* pBoundingSphere1;
-	BoundingSphereClass* pBoundingSphere2;
+	BoundingBoxClass* pBoundingBox1;
+	BoundingBoxClass* pBoundingBox2;
 	matrix4 m_m4Creeper;
 
 	//Standard variables
@@ -60,10 +60,10 @@ public:
 	void Run (void);
 
 	/*
-	GenerateBoundingSphere
+	GenerateBoundingBox
 		Calculates a sphere that involves the model specified by name under the provided matrix
 	*/
-	void GenerateBoundingSphere(matrix4 a_mModelToWorld, String a_sInstanceName);
+	void GenerateBoundingBox(matrix4 a_mModelToWorld, String a_sInstanceName);
 
 private:
 	/* Constructor	*/

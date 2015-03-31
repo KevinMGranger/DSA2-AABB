@@ -109,6 +109,7 @@ xcopy "$(SolutionDir)include\ME\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Com
     <ClInclude Include="..\res\Resource.h" />
     <ClInclude Include="ApplicationClass.h" />
     <ClInclude Include="BoundingBoxClass.h" />
+    <ClInclude Include="BoundingBoxManagerSingleton.h" />
     <ClInclude Include="BoundingSphereClass.h" />
     <ClInclude Include="BoundingSphereManagerSingleton.h" />
     <ClInclude Include="Main.h" />
@@ -121,6 +122,7 @@ xcopy "$(SolutionDir)include\ME\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Com
     <ClCompile Include="ApplicationClass.cpp" />
     <ClCompile Include="ApplicationControls.cpp" />
     <ClCompile Include="BoundingBoxClass.cpp" />
+    <ClCompile Include="BoundingBoxManagerSingleton.cpp" />
     <ClCompile Include="BoundingSphereClass.cpp" />
     <ClCompile Include="BoundingSphereManagerSingleton.cpp" />
     <ClCompile Include="Main.cpp" />
