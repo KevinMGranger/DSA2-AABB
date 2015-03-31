@@ -166,13 +166,16 @@ void BoundingBoxManagerSingleton::CalculateCollision(void)
 		auto &bfront = bmax.z;
 		auto &bback = bmin.z;
 
-		if (isBetween(aright, bleft, bright) || isBetween(bright, aleft, aright))
+		if (isBetween(aright, bleft, bright) || isBetween(bright, aleft, aright) ||
+			isBetween(aleft, bleft, bright) || isBetween(bleft, aleft, aright))
 			numFacesInBound++;
 
-		if (isBetween(atop, bbottom, btop) || isBetween(btop, aleft, atop))
+		if (isBetween(atop, bbottom, btop) || isBetween(btop, abottom, atop) ||
+			isBetween(abottom, bbottom, btop) || isBetween(bbottom, abottom, atop))
 			numFacesInBound++;
 
-		if (isBetween(afront, bback, bfront) || isBetween(bfront, aleft, afront))
+		if (isBetween(afront, bback, bfront) || isBetween(bfront, aback, afront) ||
+			isBetween(aback, bback, bfront) || isBetween(bback, aback, afront))
 			numFacesInBound++;
 
 		if (numFacesInBound == 3)
