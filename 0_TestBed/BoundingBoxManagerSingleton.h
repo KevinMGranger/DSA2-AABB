@@ -10,7 +10,7 @@ Date: 2015/03
 //System Class
 class BoundingBoxManagerSingleton
 {
-	int m_nBoxs; //number of elements in the list
+	int m_nBoxen; //number of elements in the list
 	std::vector<BoundingBoxClass*> m_lBox; //list of spheres
 	std::vector<matrix4> m_lMatrix; //list of Global spaces of each sphere in the list
 	std::vector<vector3> m_lColor; //list of colors of each sphere in the list
@@ -71,4 +71,4 @@ private:
 	void Init(void);
 };
 
-#endif __BOUNDINGSPHEREMANAGERSINGLETON_H_
+#endif __BOUNDINGBOXMANAGERSINGLETON_H_

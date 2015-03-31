@@ -4,12 +4,12 @@
 BoundingBoxManagerSingleton* BoundingBoxManagerSingleton::m_pInstance = nullptr;
 void BoundingBoxManagerSingleton::Init(void)
 {
-	m_nBoxs = 0;
+	m_nBoxen = 0;
 }
 void BoundingBoxManagerSingleton::Release(void)
 {
 	//Clean the list of spheres
-	for(int n = 0; n < m_nBoxs; n++)
+	for(int n = 0; n < m_nBoxen; n++)
 	{
 		//Make sure to release the memory of the pointers
 		if(m_lBox[n] != nullptr)
@@ -21,7 +21,7 @@ void BoundingBoxManagerSingleton::Release(void)
 	m_lBox.clear();
 	m_lMatrix.clear();
 	m_lColor.clear();
-	m_nBoxs = 0;
+	m_nBoxen = 0;
 }
 BoundingBoxManagerSingleton* BoundingBoxManagerSingleton::GetInstance()
 {
@@ -45,7 +45,7 @@ BoundingBoxManagerSingleton::BoundingBoxManagerSingleton(BoundingBoxManagerSingl
 BoundingBoxManagerSingleton& BoundingBoxManagerSingleton::operator=(BoundingBoxManagerSingleton const& other) { return *this; }
 BoundingBoxManagerSingleton::~BoundingBoxManagerSingleton(){Release();};
 //Accessors
-int BoundingBoxManagerSingleton::GetBoxTotal(void){ return m_nBoxs; }
+int BoundingBoxManagerSingleton::GetBoxTotal(void){ return m_nBoxen; }
 
 //--- Non Standard Singleton Methods
 void BoundingBoxManagerSingleton::GenerateBoundingBox(String a_sInstanceName)
@@ -67,7 +67,7 @@ void BoundingBoxManagerSingleton::GenerateBoundingBox(String a_sInstanceName)
 			//Specify the color the sphere is going to have
 			m_lColor.push_back(vector3(1.0f));
 			//Increase the number of spheres
-			m_nBoxs++;
+			m_nBoxen++;
 		}
 	}
 }
@@ -86,7 +86,7 @@ void BoundingBoxManagerSingleton::SetBoundingBoxSpace(matrix4 a_mModelToWorld, S
 int BoundingBoxManagerSingleton::IdentifyBox(String a_sInstanceName)
 {
 	//Go one by one for all the spheres in the list
-	for(int nBox = 0; nBox < m_nBoxs; nBox++)
+	for(int nBox = 0; nBox < m_nBoxen; nBox++)
 	{
 		//If the current sphere is the one we are looking for we return the index
 		if(a_sInstanceName == m_lBox[nBox]->GetName())
@@ -100,7 +100,7 @@ void BoundingBoxManagerSingleton::AddBoxToRenderList(String a_sInstanceName)
 	//If I need to render all
 	if(a_sInstanceName == "ALL")
 	{
-		for(int nBox = 0; nBox < m_nBoxs; nBox++)
+		for(int nBox = 0; nBox < m_nBoxen; nBox++)
 		{
 			m_lBox[nBox]->AddBoxToRenderList(m_lMatrix[nBox], m_lColor[nBox], true);
 		}
@@ -115,42 +115,67 @@ void BoundingBoxManagerSingleton::AddBoxToRenderList(String a_sInstanceName)
 	}
 }
 
+// Return true if a value is between the other two values, exclusively
+// (C'mon, float equality?)
+static bool isBetween(float value, float min, float max)
+{
+	return (value > min && value < max);
+}
+
 void BoundingBoxManagerSingleton::CalculateCollision(void)
 {
-	//Create a placeholder for all center points
-	std::vector<vector3> lCentroid;
-	//for all spheres...
-	for(int nBox = 0; nBox < m_nBoxs; nBox++)
-	{
-		//Make all the spheres white
-		m_lColor[nBox] = vector3(1.0f);
-		//Place all the centroids of spheres in global space
-		lCentroid.push_back(static_cast<vector3>(m_lMatrix[nBox] * vector4(m_lBox[nBox]->GetCentroid(), 1.0f)));
-	}
+	/* A collision occurs when 3 orthogonal faces total, across both boxes,
+	 * exist within the dimensionally equivalent bounds of faces of the other box.
+	 *
+	 * A face's value in its dimension can be found via the min and max vector3s.
+	 *
+	 * Specifically:
+	 * max.x = right
+	 * min.x = left
+	 * max.y = top
+	 * min.y = bottom
+	 * max.z = front
+	 * min.z = back
+	 */
 
-	//now the actual check for all spheres among all spheres (so... one by one), this is not the most optimal way, there is a more clever one
-	for(int i = 0; i < m_nBoxs; i++)
+	for(int i = 0; i < m_nBoxen - 1; i++)
+	for(int j = i + 1; j < m_nBoxen; j++)
 	{
-		for(int j = 0; j < m_nBoxs; j++)
-		{
-			if(i != j)
-			{
-				//If the distance between the center of both spheres is less than the sum of their radius there is a collision
-				if(glm::distance(lCentroid[i], lCentroid[j]) < (m_lBox[i]->GetRadius() + m_lBox[j]->GetRadius()))
-					m_lColor[i] = m_lColor[j] = MERED; //We make the spheres red
-			}
-		}
-	}
-	
+		int numFacesInBound = 0;
 
-	////This way is more optimal, just half the checks are needed
-	//for(int i = 0; i < m_nBoxs - 1; i++)
-	//{
-	//	for(int j = i + 1; j < m_nBoxs; j++)
-	//	{
-	//		//If the distance between the center of both spheres is less than the sum of their radius there is a collision
-	//		if(glm::distance(lCentroid[i], lCentroid[j]) < (m_lBox[i]->GetRadius() + m_lBox[j]->GetRadius()))
-	//			m_lColor[i] = m_lColor[j] = MERED; //We make the spheres red
-	//	}
-	//}
+		auto a = m_lBox[i];
+		auto b = m_lBox[j];
+
+		auto &amax = a->v3Max;
+		auto &amin = a->v3Min;
+
+		auto &bmax = b->v3Max;
+		auto &bmin = b->v3Min;
+
+		auto &aright = amax.x;
+		auto &aleft = amin.x;
+		auto &atop = amax.y;
+		auto &abottom = amin.y;
+		auto &afront = amax.z;
+		auto &aback = amin.z;
+
+		auto &bright = bmax.x;
+		auto &bleft = bmin.x;
+		auto &btop = bmax.y;
+		auto &bbottom = bmin.y;
+		auto &bfront = bmax.z;
+		auto &bback = bmin.z;
+
+		if (isBetween(aright, bleft, bright) || isBetween(bright, aleft, aright))
+			numFacesInBound++;
+
+		if (isBetween(atop, bbottom, btop) || isBetween(btop, aleft, atop))
+			numFacesInBound++;
+
+		if (isBetween(afront, bback, bfront) || isBetween(bfront, aleft, afront))
+			numFacesInBound++;
+
+		if (numFacesInBound == 3)
+			m_lColor[i] = m_lColor[j] = MERED;
+	}
 }
