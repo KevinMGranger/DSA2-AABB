@@ -64,22 +64,23 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)
 		{
 			//m_v3Centroid += lVertices[nVertex];
-			if(v3Min.x > lVertices[nVertex].x)
-				v3Min.x = lVertices[nVertex].x;
-			else if(v3Max.x < lVertices[nVertex].x)
-				v3Max.x = lVertices[nVertex].x;
-			
-			if(v3Min.y > lVertices[nVertex].y)
-				v3Min.y = lVertices[nVertex].y;
-			else if(v3Max.y < lVertices[nVertex].y)
-				v3Max.y = lVertices[nVertex].y;
-
-			if(v3Min.z > lVertices[nVertex].z)
-				v3Min.z = lVertices[nVertex].z;
-			else if(v3Max.z < lVertices[nVertex].z)
-				v3Max.z = lVertices[nVertex].z;
+			//x
+			if(left > lVertices[nVertex].x)
+				left = lVertices[nVertex].x;
+			else if(right < lVertices[nVertex].x)
+				right = lVertices[nVertex].x;
+			//y
+			if(top > lVertices[nVertex].y)
+				top = lVertices[nVertex].y;
+			else if(bottom < lVertices[nVertex].y)
+				bottom = lVertices[nVertex].y;
+			//z
+			if(front > lVertices[nVertex].z)
+				front = lVertices[nVertex].z;
+			else if(back < lVertices[nVertex].z)
+				back = lVertices[nVertex].z;
 		}
-		m_v3Centroid = (v3Min + v3Max) / 2.0f;
+		m_v3Centroid = (front + back) / 2.0f;
 
 		m_fRadius = glm::distance(m_v3Centroid, lVertices[0]);
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)

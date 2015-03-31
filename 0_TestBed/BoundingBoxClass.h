@@ -14,6 +14,8 @@ class BoundingBoxClass //determining centroid is the same
 	float left;
 	float front; //positive z
 	float back; //negetive z
+	vector3 v3Max;
+	vector3 v3Min;
 	vector3 m_v3Centroid;//Center point of the model, the origin in GSpace in which the sphere is going to be located
 	String m_sName;//Name of the BoundingBox (to relate to the instance)
 
