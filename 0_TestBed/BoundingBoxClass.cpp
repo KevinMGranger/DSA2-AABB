@@ -83,7 +83,8 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		m_v3Centroid = (v3Max + v3Min) / 2.0f;
 
 		//m_fRadius = glm::distance(m_v3Centroid, lVertices[0]); //should now be distance to a face, not to a point
-		m_fRadius = v3Max.x - m_v3Centroid.x;
+		//m_fRadius = v3Max.x - m_v3Centroid.x;
+		m_fRadius = glm::float_distance(m_v3Centroid.z, front);
 		//m_fRadius = glm::distance(m_v3Centroid, v3Max);
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)
 		{
