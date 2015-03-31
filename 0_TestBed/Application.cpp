@@ -81,6 +81,7 @@ void ApplicationClass::Update (void)
 
 	fRunTime += fTimeSpan; //update the run time count
 	matrix4 m4Steve = glm::rotate(matrix4(IDENTITY), fRunTime * 15, vector3( 0.0f,-1.0f, 0.0f));
+	matrix4 m4SteveBoundingBox = matrix4(IDENTITY); //glm::translate(vector3( 0.0f,-1.0f, 0.0f));
 	matrix4 m4Zombie = glm::translate(vector3(-6.0f, 0.0f, 0.0f));
 	matrix4 m4Cow = glm::translate(vector3(-3.0f, 0.0f, 0.0f));
 	matrix4 m4Pig = glm::translate(vector3(6.0f, 0.0f, 0.0f));
@@ -110,7 +111,7 @@ void ApplicationClass::Update (void)
 	m_pBSMngr->GenerateBoundingBox("Zombie");
 	m_pBSMngr->GenerateBoundingBox("Pig");
 
-	m_pBSMngr->SetBoundingBoxSpace(m4Steve, "Steve");
+	m_pBSMngr->SetBoundingBoxSpace(m4SteveBoundingBox, "Steve");
 	m_pBSMngr->SetBoundingBoxSpace(m_m4Creeper, "Creeper");
 	m_pBSMngr->SetBoundingBoxSpace(m4Cow, "Cow");
 	m_pBSMngr->SetBoundingBoxSpace(m4Pig, "Pig");

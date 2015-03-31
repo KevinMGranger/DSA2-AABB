@@ -99,5 +99,5 @@ void BoundingBoxClass::AddBoxToRenderList(matrix4 a_mModelToWorld, vector3 a_vCo
 	MeshManagerSingleton* pMeshMngr = MeshManagerSingleton::GetInstance();
 	if(a_bRenderCentroid)
 		pMeshMngr->AddAxisToQueue(a_mModelToWorld * glm::translate(m_v3Centroid));
-	pMeshMngr->AddSphereToQueue(a_mModelToWorld * glm::translate(m_v3Centroid) * glm::scale(vector3(m_fRadius * 2.0f)), a_vColor, MERENDER::WIRE);
+	pMeshMngr->AddCubeToQueue(a_mModelToWorld * glm::translate(m_v3Centroid) * glm::scale(vector3(m_fRadius * 2.0f)), a_vColor, MERENDER::WIRE);
 }
