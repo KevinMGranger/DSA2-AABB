@@ -6,18 +6,7 @@
 //System Class
 class BoundingBoxClass //determining centroid is the same
 {
-	bool m_bInitialized; //Has the elements of this object been initialized before?
-	float m_fRadius;//Radius of the collision sphere
-	float top;
-	float bottom;
-	float right;
-	float left;
-	float front; //positive z
-	float back; //negetive z
-	vector3 v3Max;
-	vector3 v3Min;
-	vector3 m_v3Centroid;//Center point of the model, the origin in GSpace in which the sphere is going to be located
-	String m_sName;//Name of the BoundingBox (to relate to the instance)
+	
 
 public:
 	/* Constructor */
@@ -67,6 +56,20 @@ public:
 		Adds the sphere to the render list specifying also if rendering the centroid is necessary
 	*/
 	void AddBoxToRenderList(matrix4 a_mModelToWorld, vector3 a_vColor, bool a_bRenderCentroid = false); //addBox
+
+	//members
+	bool m_bInitialized; //Has the elements of this object been initialized before?
+	float m_fRadius;//Radius of the collision sphere
+	float top;
+	float bottom;
+	float right;
+	float left;
+	float front; //positive z
+	float back; //negetive z
+	vector3 v3Max;
+	vector3 v3Min;
+	vector3 m_v3Centroid;//Center point of the model, the origin in GSpace in which the sphere is going to be located
+	String m_sName;//Name of the BoundingBox (to relate to the instance)
 
 	
 private:
