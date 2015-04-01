@@ -45,6 +45,7 @@ BoundingBoxManagerSingleton::BoundingBoxManagerSingleton(BoundingBoxManagerSingl
 BoundingBoxManagerSingleton& BoundingBoxManagerSingleton::operator=(BoundingBoxManagerSingleton const& other) { return *this; }
 BoundingBoxManagerSingleton::~BoundingBoxManagerSingleton(){Release();};
 //Accessors
+//Get and set # of boxes
 int BoundingBoxManagerSingleton::GetBoxTotal(void){ return m_nBoxen; }
 
 //--- Non Standard Singleton Methods
@@ -132,10 +133,15 @@ void BoundingBoxManagerSingleton::CalculateCollision(void)
 	 * max.z = front
 	 * min.z = back
 	 */
+	//translating max/min vectors
 
 	for(int i = 0; i < m_nBoxen - 1; i++)
 	for(int j = i + 1; j < m_nBoxen; j++)
 	{
+		//make white at start
+		m_lColor[m_nBoxen] = vector3(1.0f);
+		
+		
 		auto a = m_lBox[i];
 		auto b = m_lBox[j];
 
@@ -144,6 +150,10 @@ void BoundingBoxManagerSingleton::CalculateCollision(void)
 
 		auto &bmax = b->v3Max;
 		auto &bmin = b->v3Min;
+
+		//we now have v3Max abd v3Min, so we should look up their matrices
+		//test, why does it not recognize it?
+		//v3Max = glm::translate(0.0, 1.0, 0.0);
 
 		auto &aright = amax.x;
 		auto &aleft = amin.x;
