@@ -60,12 +60,6 @@ public:
 	//members
 	bool m_bInitialized; //Has the elements of this object been initialized before?
 	float m_fRadius;//Radius of the collision sphere
-	float top;
-	float bottom;
-	float right;
-	float left;
-	float front; //positive z
-	float back; //negetive z
 	vector3 v3Max;
 	vector3 v3Min;
 	vector3 m_v3Centroid;//Center point of the model, the origin in GSpace in which the sphere is going to be located

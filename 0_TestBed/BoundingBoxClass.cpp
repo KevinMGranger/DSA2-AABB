@@ -59,8 +59,17 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		std::vector<vector3> lVertices = pMeshMngr->GetVertices(m_sName);
 		unsigned int nVertices = lVertices.size();
 		m_v3Centroid = lVertices[0];
+
 		v3Max = lVertices[0];
 		v3Min = lVertices[0];
+
+		auto &right = v3Max.x;
+		auto &left = v3Min.x;
+		auto &top = v3Max.y;
+		auto &bottom = v3Min.y;
+		auto &front = v3Max.z;
+		auto &back = v3Min.z;
+
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)
 		{
 			//m_v3Centroid += lVertices[nVertex];
@@ -80,35 +89,43 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 			else if(back < lVertices[nVertex].z)
 				back = lVertices[nVertex].z;
 		}
+
 		m_v3Centroid = (v3Max + v3Min) / 2.0f;
 
-		//m_fRadius = glm::distance(m_v3Centroid, lVertices[0]); //should now be distance to a face, not to a point
-		m_fRadius = v3Max.x - m_v3Centroid.x;
-		//m_fRadius = glm::float_distance(m_v3Centroid.z, front); //crashes program
-		//m_fRadius = glm::distance(m_v3Centroid, v3Max);
+		/*
+		float radii[] = {
+			abs(v3Max.x - m_v3Centroid.x),
+			abs(v3Min.x - m_v3Centroid.x),
+			abs(v3Max.y - m_v3Centroid.y),
+			abs(v3Min.y - m_v3Centroid.y),
+			abs(v3Max.z - m_v3Centroid.z),
+			abs(v3Min.z - m_v3Centroid.z)
+		};
+
+		width = radii[0] + radii[1];
+		height = radii[2] + radii[3];
+		depth = radii[4] + radii[5];
+
+		maxdim = width;
+
+		if (height > maxdim) maxdim = height;
+		if (depth > maxdim) maxdim = depth;
+
+		m_fRadius = radii[0];
+
+		for (int i = 1; i < 6; i++)
+		{
+			if (radii[i] > m_fRadius) m_fRadius = radii[i];
+		}
+		*/
+
+		m_fRadius = glm::distance(m_v3Centroid, lVertices[0]);
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)
 		{
-			/*float m_fRadiusNew = glm::distance(m_v3Centroid, lVertices[nVertex]);
+			float m_fRadiusNew = glm::distance(m_v3Centroid, lVertices[nVertex]);
 			if(m_fRadius < m_fRadiusNew)
-				m_fRadius = m_fRadiusNew;*/
-			if(v3Max.x - m_v3Centroid.x > m_fRadius) //v3Max - Centroid.x for each one of them, no longer use vertices, i.e. lVertices[nVertex].x
-				   {
-					   //m_fRadius = lVertices[nVertex].x;
-					   m_fRadius = v3Max.x - m_v3Centroid.x;
-				   }
-				   else if(v3Max.y - m_v3Centroid.y > m_fRadius)
-				   {
-					  //m_fRadius = lVertices[nVertex].y;
-					  m_fRadius = v3Max.y - m_v3Centroid.y;
-				   }
-				   
-				   else if(v3Max.z - m_v3Centroid.z < m_fRadius)
-				   {
-					   //m_fRadius = lVertices[nVertex].z;
-					   m_fRadius = v3Max.z - m_v3Centroid.z;
-				   }
+				m_fRadius = m_fRadiusNew;
 		}
-		
 
 		m_bInitialized = true;
 	}
