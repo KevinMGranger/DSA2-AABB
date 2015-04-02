@@ -1,4 +1,5 @@
 #include "BoundingBoxManagerSingleton.h"
+#include <cstdio>
 
 //  BoundingBoxManagerSingleton
 BoundingBoxManagerSingleton* BoundingBoxManagerSingleton::m_pInstance = nullptr;
@@ -122,53 +123,46 @@ void BoundingBoxManagerSingleton::CalculateCollision(void)
 	 * of each box overlap within their respective dimensions.
      *
 	 * i.e. when the lines representing width overlap, as well as height and depth.
-	 *
-	 * A face's value in its dimension can be found via the min and max vector3s.
-	 *
-	 * Specifically:
-	 * max.x = right
-	 * min.x = left
-	 * max.y = top
-	 * min.y = bottom
-	 * max.z = front
-	 * min.z = back
 	 */
-	//translating max/min vectors
 
+	//make all white at start
+	for (auto &color : m_lColor) {
+		color = vector3(1.0f);
+	}
+
+	// Given the centroid and maximum radius, find if the lines in each dimension from each cube
+	// overlap.
 	for(int i = 0; i < m_nBoxen - 1; i++)
 	for(int j = i + 1; j < m_nBoxen; j++)
 	{
-		//make white at start
-		m_lColor[m_nBoxen] = vector3(1.0f);
-		
-		
-		auto a = m_lBox[i];
-		auto b = m_lBox[j];
+		auto &a = m_lBox[i];
+		auto &b = m_lBox[j];
 
-		auto &amax = a->v3Max;
-		auto &amin = a->v3Min;
+		auto &atrans = m_lMatrix[i];
+		auto &btrans = m_lMatrix[j];
 
-		auto &bmax = b->v3Max;
-		auto &bmin = b->v3Min;
+		auto arad = a->GetRadius();
+		auto brad = b->GetRadius();
 
-		//we now have v3Max abd v3Min, so we should look up their matrices
-		//test, why does it not recognize it?
-		//v3Max = glm::translate(0.0, 1.0, 0.0);
+		// translate into world space
+		auto acent = atrans * vector4(a->GetCentroid(), 1.0f);
+		auto bcent = btrans * vector4(b->GetCentroid(), 1.0f);
 
-		auto &aright = amax.x;
-		auto &aleft = amin.x;
-		auto &atop = amax.y;
-		auto &abottom = amin.y;
-		auto &afront = amax.z;
-		auto &aback = amin.z;
+		auto aleft = acent.x - arad;
+		auto aright = acent.x + arad;
+		auto abottom = acent.y - arad;
+		auto atop = acent.y + arad;
+		auto aback = acent.z - arad;
+		auto afront = acent.z + arad;
 
-		auto &bright = bmax.x;
-		auto &bleft = bmin.x;
-		auto &btop = bmax.y;
-		auto &bbottom = bmin.y;
-		auto &bfront = bmax.z;
-		auto &bback = bmin.z;
+		auto bleft = bcent.x - brad;
+		auto bright = bcent.x + brad;
+		auto bbottom = bcent.y - brad;
+		auto btop = bcent.y + brad;
+		auto bback = bcent.z - brad;
+		auto bfront = bcent.z + brad;
 
+		// if we're colliding, mark it red
 		if (aleft < bright && aright > bleft &&
 			abottom < btop && atop > bbottom &&
 			aback < bfront && afront > bback)

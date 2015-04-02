@@ -58,6 +58,9 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		
 		std::vector<vector3> lVertices = pMeshMngr->GetVertices(m_sName);
 		unsigned int nVertices = lVertices.size();
+
+		// find the centroid by taking the maximal and minimal values in each dimension
+		// and averaging their positions, respectively.
 		m_v3Centroid = lVertices[0];
 
 		v3Max = lVertices[0];
@@ -69,10 +72,8 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		auto &bottom = v3Min.y;
 		auto &front = v3Max.z;
 		auto &back = v3Min.z;
-
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)
 		{
-			//m_v3Centroid += lVertices[nVertex];
 			//x
 			if(left > lVertices[nVertex].x)
 				left = lVertices[nVertex].x;
@@ -92,33 +93,9 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 
 		m_v3Centroid = (v3Max + v3Min) / 2.0f;
 
-		/*
-		float radii[] = {
-			abs(v3Max.x - m_v3Centroid.x),
-			abs(v3Min.x - m_v3Centroid.x),
-			abs(v3Max.y - m_v3Centroid.y),
-			abs(v3Min.y - m_v3Centroid.y),
-			abs(v3Max.z - m_v3Centroid.z),
-			abs(v3Min.z - m_v3Centroid.z)
-		};
-
-		width = radii[0] + radii[1];
-		height = radii[2] + radii[3];
-		depth = radii[4] + radii[5];
-
-		maxdim = width;
-
-		if (height > maxdim) maxdim = height;
-		if (depth > maxdim) maxdim = depth;
-
-		m_fRadius = radii[0];
-
-		for (int i = 1; i < 6; i++)
-		{
-			if (radii[i] > m_fRadius) m_fRadius = radii[i];
-		}
-		*/
-
+		// find the radius by finding the maximal distance from the centroid
+		// to each possible vertex.
+		// Why not to a cube face? Because a model could be rotated, and that might make it poke out!
 		m_fRadius = glm::distance(m_v3Centroid, lVertices[0]);
 		for(unsigned int nVertex = 1; nVertex < nVertices; nVertex++)
 		{
@@ -130,6 +107,7 @@ void BoundingBoxClass::GenerateBoundingBox(String a_sInstanceName)
 		m_bInitialized = true;
 	}
 }
+
 void BoundingBoxClass::AddBoxToRenderList(matrix4 a_mModelToWorld, vector3 a_vColor, bool a_bRenderCentroid)
 {
 	if(!m_bInitialized)
